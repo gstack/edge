@@ -1,4 +1,4 @@
-Edge.js: .NET and Node.js in-process
+Edge.js: .NET and Node.js in-process [![Build Status](https://travis-ci.org/tjanczuk/edge.svg)](https://travis-ci.org/tjanczuk/edge)
 ====
  
 An edge connects two nodes. This edge connects Node.js and .NET. V8 and CLR/Mono - in process. On Windows, MacOS, and Linux. 
@@ -67,7 +67,7 @@ Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-co
 
 [Introduction](#introduction)  
 [Scripting CLR from Node.js](#scripting-clr-from-nodejs)  
-&nbsp;&nbsp;&nbsp;&nbsp;[What you need](#what-you-need)  
+&nbsp;&nbsp;&nbsp;&nbsp;[What you need (Windows, Linux, MacOS, Docker)](#what-you-need)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: C# hello, world](#how-to-c-hello-world)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: integrate C# code into Node.js code](#how-to-integrate-c-code-into-nodejs-code)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: specify additional CLR assembly references in C# code](#how-to-specify-additional-clr-assembly-references-in-c-code)  
@@ -83,7 +83,7 @@ Listen to the [Edge.js podcast on Herdingcode](http://herdingcode.com/herding-co
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: exceptions](#how-to-exceptions)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: app.config](#how-to-app-config)  
 &nbsp;&nbsp;&nbsp;&nbsp;[How to: debugging](#how-to-debugging)  
-&nbsp;&nbsp;&nbsp;&nbsp;[Performance](#performance)  
+&nbsp;&nbsp;&nbsp;&nbsp;[Performance](#performance)
 &nbsp;&nbsp;&nbsp;&nbsp;[Building on Windows](#building-on-windows)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Building on OSX](#building-on-osx)  
 &nbsp;&nbsp;&nbsp;&nbsp;[Building on Linux](#building-on-linux)  
@@ -154,6 +154,17 @@ Edge.js runs on Windows, Linux, and MacOS and requires Node.js 0.8 or later, as 
 * Check out [Mac OS setup instructions](#building-on-osx)  
 
 ![image](https://cloud.githubusercontent.com/assets/822369/2808046/8f4ce378-cd0b-11e3-95dc-ef0842c28821.png)
+
+#### Docker
+
+Edge.js is available as a Docker image on the [tjanczuk/edgejs repository on Docker Hub](https://registry.hub.docker.com/u/tjanczuk/edgejs/). The image is based on Ubuntu 14.04, and contains Node.js 0.10.30 x64, Mono 3.4.0 x64, and globally installed Edge.js:
+
+```
+> docker run -it tjanczuk/edgejs:0.9.3
+> cd samples
+> node 101_hello_lambda.js
+.NET welcomes Node.js
+```
 
 ### How to: C# hello, world
 
@@ -1428,7 +1439,11 @@ Console.WriteLine(await new WebClient().DownloadStringTaskAsync("http://localhos
 
 ### How to: use external Node.js modules
 
-You can use external Node.js modules, for example modules installed from NPM. To install modules from NPM, you must first [install Node.js](http://nodejs.org) on your machine and use the `npm` package manager that comes with the Node.js installation. NPM modules must be installed in the directory where your build system binplaces the Edge.js NuGet package (most likely the same location as the rest of your application binaries), or any ancestor directory. Alternatively, you can install NPM modules globally on the machine using `npm install -g`:
+You can use external Node.js modules, for example modules installed from NPM. 
+
+Note: Most Node.js modules are written in JavaScript and will execute in Edge as-is. However, some Node.js external modules are native binary modules, rebuilt by NPM on module installation to suit your local execution environment. Native binary modules will not run in Edge unless they are rebuilt to link against the NodeJS dll that Edge uses.
+
+To install modules from NPM, you must first [install Node.js](http://nodejs.org) on your machine and use the `npm` package manager that comes with the Node.js installation. NPM modules must be installed in the directory where your build system places the Edge.js NuGet package (most likely the same location as the rest of your application binaries), or any ancestor directory. Alternatively, you can install NPM modules globally on the machine using `npm install -g`:
 
 ```
 C:\projects\websockets> npm install ws
